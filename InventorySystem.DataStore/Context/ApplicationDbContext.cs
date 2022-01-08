@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace InventorySystem.App.Data
+namespace InventorySystem.DataStore.Context
 {
     public class ApplicationDbContext : IdentityDbContext
     {
