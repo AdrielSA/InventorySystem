@@ -12,11 +12,17 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.13" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\InventorySystem.Core\InventorySystem.Core.csproj" />
     <ProjectReference Include="..\InventorySystem.DataStore\InventorySystem.DataStore.csproj" />
+    <ProjectReference Include="..\SystemInventory.Utilities\SystemInventory.Utilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Controllers\" />
   </ItemGroup>
 
 </Project>

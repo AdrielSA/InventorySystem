@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\InventorySystem.Core\InventorySystem.Core.csproj" />
+    <ProjectReference Include="..\SystemInventory.Utilities\SystemInventory.Utilities.csproj" />
   </ItemGroup>
 
   <ItemGroup>

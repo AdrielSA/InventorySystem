@@ -1,4 +1,4 @@
-﻿using InventorySystem.App.Models;
+﻿using InventorySystem.Core.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -7,8 +7,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace InventorySystem.App.Controllers
+namespace InventorySystem.App.Areas.Inventory.Controllers
 {
+    [Area("Inventory")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
