@@ -1,4 +1,6 @@
+using InventorySystem.Core.Interfaces.IRepositories;
 using InventorySystem.DataStore.Context;
+using InventorySystem.DataStore.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,8 +34,12 @@ namespace InventorySystem.App
 
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddControllersWithViews()
                 .AddRazorRuntimeCompilation();
+
             services.AddRazorPages();
         }
 
@@ -56,14 +62,6 @@ namespace InventorySystem.App
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapControllerRoute(
-            //        name: "default",
-            //        pattern: "{controller=Home}/{action=Index}/{id?}");
-            //    endpoints.MapRazorPages();
-            //});
 
             app.UseEndpoints(endpoints =>
             {
