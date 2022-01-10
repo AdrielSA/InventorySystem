@@ -18,6 +18,7 @@ namespace InventorySystem.Core.Entities
         public string Description { get; set; }
 
         [Required]
+        [Display(Name = "Estado")]
         public bool Status { get; set; }
     }
 }
