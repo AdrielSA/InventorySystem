@@ -11,12 +11,10 @@ namespace InventorySystem.DataStore.Repositories
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         internal DbSet<T> _entities;
-        private readonly ApplicationDbContext _context;
 
         public BaseRepository(ApplicationDbContext context)
         {
             _entities = context.Set<T>();
-            _context = context;
         }
 
         public T Get(int id)

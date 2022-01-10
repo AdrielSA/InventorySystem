@@ -6,6 +6,8 @@ namespace InventorySystem.Core.Interfaces.IRepositories
     {
         IStoreHouseRepository StoreHouseRepository { get; }
 
+        ICategoryRepository CategoryRepository { get; }
+
         void SavesChanges();
     }
 }

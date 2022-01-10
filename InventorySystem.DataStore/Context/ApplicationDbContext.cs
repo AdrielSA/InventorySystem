@@ -9,5 +9,6 @@ namespace InventorySystem.DataStore.Context
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<StoreHouse> StoreHouses { get; set; }
+        public DbSet<Category> Categories { get; set; }
     }
 }
