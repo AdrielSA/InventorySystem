@@ -1,11 +1,8 @@
-﻿using InventorySystem.Core.ViewModels;
+﻿using InventorySystem.Core.Interfaces.IRepositories;
+using InventorySystem.Core.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace InventorySystem.App.Areas.Inventory.Controllers
 {
@@ -13,15 +10,18 @@ namespace InventorySystem.App.Areas.Inventory.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
         {
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var products = _unitOfWork.ProductRepository.GetAll(IncludProperties: "Category,Brand");
+            return View(products);
         }
 
         public IActionResult Privacy()

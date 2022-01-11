@@ -10,6 +10,8 @@ namespace InventorySystem.Core.Interfaces.IRepositories
 
         IBrandRepository BrandRepository { get; }
 
+        IProductRepository ProductRepository { get; }
+
         void SavesChanges();
     }
 }

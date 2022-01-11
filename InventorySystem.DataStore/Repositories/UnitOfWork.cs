@@ -9,6 +9,7 @@ namespace InventorySystem.DataStore.Repositories
         public IStoreHouseRepository StoreHouseRepository { get; private set; }
         public ICategoryRepository CategoryRepository { get; private set; }
         public IBrandRepository BrandRepository { get; private set; }
+        public IProductRepository ProductRepository { get; private set; }
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -16,6 +17,7 @@ namespace InventorySystem.DataStore.Repositories
             StoreHouseRepository = new StoreHouseRepository(_context);
             CategoryRepository = new CategoryRepository(_context);
             BrandRepository = new BrandRepository(_context);
+            ProductRepository = new ProductRepository(_context);
         }
 
         public void SavesChanges()

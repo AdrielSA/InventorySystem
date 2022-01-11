@@ -1,0 +1,132 @@
+﻿@model ProductViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var title = "Añadir Producto";
+}
+
+<form method="post" enctype="multipart/form-data">
+    <div class="row p-3">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    </div>
+    @if (Model.Product.Id != 0)
+    {
+        title = "Actualizar Producto";
+    }
+
+    <div class="col-12 border-bottom">
+        <h2 class="text-primary">@title</h2>
+    </div>
+    <div class="col-8 pt-4">
+        <div class="form-group row">
+            <div class="col-4">
+                <label asp-for="Product.SerialNumber">Número de Serie</label>
+            </div>
+            <div class="col-8">
+                <input asp-for="Product.SerialNumber" class="form-control" />
+                <span asp-validation-for="Product.SerialNumber" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-4">
+                <label asp-for="Product.Description">Descripción</label>
+            </div>
+            <div class="col-8">
+                <input asp-for="Product.Description" class="form-control" />
+                <span asp-validation-for="Product.Description" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-4">
+                <label asp-for="Product.Cost">Costo</label>
+            </div>
+            <div class="col-8">
+                <input asp-for="Product.Cost" class="form-control" />
+                <span asp-validation-for="Product.Cost" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-4">
+                <label asp-for="Product.Price">Precio</label>
+            </div>
+            <div class="col-8">
+                <input asp-for="Product.Price" class="form-control" />
+                <span asp-validation-for="Product.Price" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-4">
+                <label asp-for="Product.IdCategory">Categoria</label>
+            </div>
+            <div class="col-8">
+                @Html.DropDownListFor(x => x.Product.IdCategory, Model.Categories, "Seleccionar", new { @class = "form-control" })
+                <span asp-validation-for="Product.IdCategory" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-4">
+                <label asp-for="Product.IdBrand">Marca</label>
+            </div>
+            <div class="col-8">
+                @Html.DropDownListFor(x => x.Product.IdBrand, Model.Brands, "Seleccionar", new { @class = "form-control" })
+                <span asp-validation-for="Product.IdBrand" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-4">
+                <label asp-for="Product.ImageUrl">Imagen</label>
+            </div>
+            <div class="col-8">
+                <input type="file" name="files" id="chooseImg" multiple class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-4">
+                <label asp-for="Product.BaseId">Base</label>
+            </div>
+            <div class="col-8">
+                @Html.DropDownListFor(x => x.Product.BaseId, Model.BaseList, "Seleccionar", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-8 offset-4">
+                @if (Model.Product.Id != 0)
+                {
+                    <partial name="_UpdateButtons" model="Model.Product.Id" />
+                }
+                else
+                {
+                    <div class="row">
+                        <div class="col">
+                            <button type="submit" onclick="return ValidEntry()" class="btn btn-primary form-control">Crear</button>
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-success form-control">Volver</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    @if (Model.Product.Id != 0)
+    {
+        <div class="col-3">
+            <img src="@Model.Product.ImageUrl" style="width: 100%; border-radius: 5px; border: 1px solid #bbb9b9" />
+        </div>
+    }
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function ValidEntry() {
+            if (document.getElementById("chooseImg").value == "") {
+                swal("Error", "Debe seleccionar una imagen", "error");
+                return false;
+            }
+            return true;
+        }
+    </script>
+}
+
