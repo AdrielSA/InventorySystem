@@ -1,4 +1,4 @@
-﻿// Start StoreHouse
+﻿// Start Category
 
 var datatable;
 
@@ -9,11 +9,10 @@ $(document).ready(function () {
 function LoadDataTable() {
     datatable = $('#tblData').DataTable({
         "ajax": {
-            "url": "/Admin/StoreHouse/GetAll"
+            "url": "/Admin/Category/GetAll"
         },
         "columns": [
             { "data": "name", "autoWidth": true },
-            { "data": "description", "autoWidth": true },
             {
                 "data": "status",
                 "render": function (data) {
@@ -31,10 +30,10 @@ function LoadDataTable() {
                 "render": function (data) {
                     return `
                         <div class="text-center">
-                            <a href="/Admin/StoreHouse/Upsert/${data}" class="btn btn-success text-white" style="cursor:pointer">
+                            <a href="/Admin/Category/Upsert/${data}" class="btn btn-success text-white" style="cursor:pointer">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a onclick=Delete("/Admin/StoreHouse/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer">
+                            <a onclick=Delete("/Admin/Category/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer">
                                 <i class="fas fa-trash"></i>
                             </a>
                         </div>
@@ -49,7 +48,7 @@ function LoadDataTable() {
 function Delete(uri) {
 
     swal({
-        title: "Está seguro que desea eliminar este Almacén?",
+        title: "Está seguro que desea eliminar esta Categoria?",
         text: "Este registro no se podrá recuperar.",
         icon: "warning",
         buttons: true,
@@ -72,4 +71,4 @@ function Delete(uri) {
     });
 }
 
-// End StoreHouse
+// End Category

@@ -3,11 +3,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace InventorySystem.UnitTest.ControllerTests
 {
     [TestClass]
-    public class UnitTest1
+    public class StoreHouseControllerTest
     {
         [TestMethod]
-        public void TestMethod1()
+        public void CorrectCall_ToIndex()
         {
+            
         }
     }
 }
