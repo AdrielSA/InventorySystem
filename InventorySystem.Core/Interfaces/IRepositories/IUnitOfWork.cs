@@ -8,6 +8,8 @@ namespace InventorySystem.Core.Interfaces.IRepositories
 
         ICategoryRepository CategoryRepository { get; }
 
+        IBrandRepository BrandRepository { get; }
+
         void SavesChanges();
     }
 }

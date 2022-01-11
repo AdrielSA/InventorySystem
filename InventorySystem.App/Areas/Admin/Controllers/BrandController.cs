@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace InventorySystem.App.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class CategoryController : Controller
+    public class BrandController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public CategoryController(IUnitOfWork unitOfWork)
+        public BrandController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
@@ -21,9 +21,9 @@ namespace InventorySystem.App.Areas.Admin.Controllers
 
         public IActionResult Upsert(int? id)
         {
-            var entity = new Category();
+            var entity = new Brand();
             if (id == null) return View(entity);
-            entity = _unitOfWork.CategoryRepository.Get(id.GetValueOrDefault());
+            entity = _unitOfWork.BrandRepository.Get(id.GetValueOrDefault());
             if (entity == null) return NotFound();
             return View(entity);
         }
@@ -33,23 +33,23 @@ namespace InventorySystem.App.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var all = _unitOfWork.CategoryRepository.GetAll();
+            var all = _unitOfWork.BrandRepository.GetAll();
             return Json(new { data = all });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert(Category entity)
+        public IActionResult Upsert(Brand entity)
         {
             if (ModelState.IsValid)
             {
                 if (entity.Id == 0)
                 {
-                    _unitOfWork.CategoryRepository.Add(entity);
+                    _unitOfWork.BrandRepository.Add(entity);
                 }
                 else
                 {
-                    _unitOfWork.CategoryRepository.Update(entity);
+                    _unitOfWork.BrandRepository.Update(entity);
                 }
                 _unitOfWork.SavesChanges();
                 return RedirectToAction(nameof(Index));
@@ -60,14 +60,14 @@ namespace InventorySystem.App.Areas.Admin.Controllers
         [HttpDelete]
         public IActionResult Delete(int id)
         {
-            var entity = _unitOfWork.CategoryRepository.Get(id);
+            var entity = _unitOfWork.BrandRepository.Get(id);
             if (entity == null)
             {
-                return Json(new { success = false, message = "Hubo un error al eliminar la categoria." });
+                return Json(new { success = false, message = "Hubo un error al eliminar la marca." });
             }
-            _unitOfWork.CategoryRepository.Remove(entity);
+            _unitOfWork.BrandRepository.Remove(entity);
             _unitOfWork.SavesChanges();
-            return Json(new { success = true, message = "Categoria eliminada exitosamente." });
+            return Json(new { success = true, message = "Marca eliminada exitosamente." });
         }
 
         #endregion

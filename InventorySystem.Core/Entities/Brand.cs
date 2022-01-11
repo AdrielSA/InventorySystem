@@ -2,7 +2,7 @@
 
 namespace InventorySystem.Core.Entities
 {
-    public class Category
+    public class Brand
     {
         [Key]
         public int Id { get; set; }

@@ -10,5 +10,6 @@ namespace InventorySystem.DataStore.Context
 
         public DbSet<StoreHouse> StoreHouses { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Brand> Brands { get; set; }
     }
 }

@@ -1,8 +1,8 @@
-﻿@model Category
+﻿@model Brand
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var title = "Añadir Categoria";
+    var title = "Añadir Marca";
 }
 
 <form method="post">
@@ -11,7 +11,7 @@
     </div>
     @if (Model.Id != 0)
     {
-        title = "Actualizar Categoria";
+        title = "Actualizar Marca";
     }
 
     <div class="col-12 border-bottom">
