@@ -1,24 +1,17 @@
-﻿using InventorySystem.Core.Interfaces.IRepositories;
+﻿using InventorySystem.Core.Interfaces.IServices;
 using InventorySystem.Core.ViewModels;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.IO;
-using System.Linq;
 
 namespace InventorySystem.App.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class ProductController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly IProductService _service;
 
-        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
+        public ProductController(IProductService service)
         {
-            _unitOfWork = unitOfWork;
-            _hostEnvironment = hostEnvironment;
+            _service = service;
         }
 
         public IActionResult Index()
@@ -28,27 +21,10 @@ namespace InventorySystem.App.Areas.Admin.Controllers
 
         public IActionResult Upsert(int? id)
         {
-            var entityVM = new ProductViewModel()
-            {
-                Product = new(),
-                Categories = _unitOfWork.CategoryRepository.GetAll().Select(x => new SelectListItem 
-                { 
-                    Text = x.Name,
-                    Value = x.Id.ToString()
-                }),
-                Brands = _unitOfWork.BrandRepository.GetAll().Select(x => new SelectListItem
-                {
-                    Text = x.Name,
-                    Value = x.Id.ToString()
-                }),
-                BaseList = _unitOfWork.ProductRepository.GetAll().Select(x => new SelectListItem
-                {
-                    Text = x.Description,
-                    Value = x.Id.ToString()
-                })
-            };
+            var entityVM = new ProductViewModel();
+            entityVM = _service.FillViewModel(entityVM);
             if (id == null) return View(entityVM);
-            entityVM.Product = _unitOfWork.ProductRepository.Get(id.GetValueOrDefault());
+            entityVM.Product = _service.GetProduct(id.Value);
             if (entityVM.Product == null) return NotFound();
             return View(entityVM);
         }
@@ -58,7 +34,7 @@ namespace InventorySystem.App.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var all = _unitOfWork.ProductRepository.GetAll(IncludProperties: "Category,Brand");
+            var all = _service.GetAllProducts();
             return Json(new { data = all });
         }
 
@@ -68,69 +44,16 @@ namespace InventorySystem.App.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Charge image
-                var webRootPath = _hostEnvironment.WebRootPath;
-                var files = HttpContext.Request.Form.Files;
-                if (files.Count > 0)
-                {
-                    var fileName = Guid.NewGuid().ToString();
-                    var uploads = Path.Combine(webRootPath, @"images\products");
-                    var extension = Path.GetExtension(files[0].FileName);
-                    if (entityVM.Product.ImageUrl != null)
-                    {
-                        // Delete image
-                        var imagePath = Path.Combine(webRootPath, entityVM.Product.ImageUrl.TrimStart('\\'));
-                        if (System.IO.File.Exists(imagePath))
-                        {
-                            System.IO.File.Delete(imagePath);
-                        }
-                    }
-                    using (var fileStream = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
-                    {
-                        files[0].CopyTo(fileStream);
-                    }
-                    entityVM.Product.ImageUrl = @"\images\products\" + fileName + extension;
-                }
-                else
-                {
-                    if (entityVM.Product.Id != 0)
-                    {
-                        var productDB = _unitOfWork.ProductRepository.Get(entityVM.Product.Id);
-                        entityVM.Product.ImageUrl = productDB.ImageUrl;
-                    }
-                }
-
-                if (entityVM.Product.Id == 0)
-                {
-                    _unitOfWork.ProductRepository.Add(entityVM.Product);
-                }
-                else
-                {
-                    _unitOfWork.ProductRepository.Update(entityVM.Product);
-                }
-                _unitOfWork.SavesChanges();
+                entityVM.Product = _service.SaveImage(entityVM.Product, HttpContext);
+                _service.Upsert(entityVM.Product);
                 return RedirectToAction(nameof(Index));
             }
             else
             {
-                entityVM.Categories = _unitOfWork.CategoryRepository.GetAll().Select(x => new SelectListItem
-                {
-                    Text = x.Name,
-                    Value = x.Id.ToString()
-                });
-                entityVM.Brands = _unitOfWork.BrandRepository.GetAll().Select(x => new SelectListItem
-                {
-                    Text = x.Name,
-                    Value = x.Id.ToString()
-                });
-                entityVM.BaseList = _unitOfWork.ProductRepository.GetAll().Select(x => new SelectListItem
-                {
-                    Text = x.Description,
-                    Value = x.Id.ToString()
-                });
+                entityVM = _service.FillViewModel(entityVM);
                 if (entityVM.Product.Id != 0)
                 {
-                    entityVM.Product = _unitOfWork.ProductRepository.Get(entityVM.Product.Id);
+                    entityVM.Product = _service.GetProduct(entityVM.Product.Id);
                 }
             }
             return View(entityVM.Product);
@@ -139,23 +62,13 @@ namespace InventorySystem.App.Areas.Admin.Controllers
         [HttpDelete]
         public IActionResult Delete(int id)
         {
-            var entity = _unitOfWork.ProductRepository.Get(id);
+            var entity = _service.GetProduct(id);
             if (entity == null)
             {
                 return Json(new { success = false, message = "Hubo un error al eliminar el producto." });
             }
-
-            // Delete image
-            var webRootPath = _hostEnvironment.WebRootPath;
-            var imagePath = Path.Combine(webRootPath, entity.ImageUrl.TrimStart('\\'));
-            if (System.IO.File.Exists(imagePath))
-            {
-                System.IO.File.Delete(imagePath);
-            }
-
-            _unitOfWork.ProductRepository.Remove(entity);
-            _unitOfWork.SavesChanges();
-            return Json(new { success = true, message = "Producto eliminado exitosamente." });
+            _service.DeleteProduct(entity);
+            return Json(new { success = true, message = "Producto eliminado." });
         }
 
         #endregion

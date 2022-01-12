@@ -1,4 +1,6 @@
 using InventorySystem.Core.Interfaces.IRepositories;
+using InventorySystem.Core.Interfaces.IServices;
+using InventorySystem.Core.Services;
 using InventorySystem.DataStore.Context;
 using InventorySystem.DataStore.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -30,6 +32,10 @@ namespace InventorySystem.App
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IStoreHouseService, StoreHouseService>();
+            services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IBrandService, BrandService>();
 
             services.AddControllersWithViews()
                 .AddRazorRuntimeCompilation();

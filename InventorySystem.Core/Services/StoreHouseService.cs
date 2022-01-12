@@ -19,20 +19,21 @@ namespace InventorySystem.Core.Services
             return _unitOfWork.StoreHouseRepository.GetAll();
         }
 
-        public StoreHouse GetStoreHouse(int? id)
+        public StoreHouse GetStoreHouse(int id)
         {
-            return _unitOfWork.StoreHouseRepository.Get(id.GetValueOrDefault());
+            return _unitOfWork.StoreHouseRepository.Get(id);
         }
 
-        public void AddStoreHouse(StoreHouse entity)
+        public void UpsertStoreHouse(StoreHouse entity)
         {
-            _unitOfWork.StoreHouseRepository.Add(entity);
-            _unitOfWork.SavesChanges();
-        }
-
-        public void UpdateStoreHouse(StoreHouse entity)
-        {
-            _unitOfWork.StoreHouseRepository.Update(entity);
+            if (entity.Id == 0)
+            {
+                _unitOfWork.StoreHouseRepository.Add(entity);
+            }
+            else
+            {
+                _unitOfWork.StoreHouseRepository.Update(entity);
+            }
             _unitOfWork.SavesChanges();
         }
 

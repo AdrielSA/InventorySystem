@@ -1,5 +1,5 @@
 ﻿using InventorySystem.Core.Entities;
-using InventorySystem.Core.Interfaces.IRepositories;
+using InventorySystem.Core.Interfaces.IServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventorySystem.App.Areas.Admin.Controllers
@@ -7,11 +7,11 @@ namespace InventorySystem.App.Areas.Admin.Controllers
     [Area("Admin")]
     public class StoreHouseController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IStoreHouseService _service;
 
-        public StoreHouseController(IUnitOfWork unitOfWork)
+        public StoreHouseController(IStoreHouseService service)
         {
-            _unitOfWork = unitOfWork;
+            _service = service;
         }
 
         public IActionResult Index()
@@ -23,7 +23,7 @@ namespace InventorySystem.App.Areas.Admin.Controllers
         {
             var entity = new StoreHouse();
             if (id == null) return View(entity);
-            entity = _unitOfWork.StoreHouseRepository.Get(id.GetValueOrDefault());
+            entity = _service.GetStoreHouse(id.Value);
             if (entity == null) return NotFound();
             return View(entity);
         }
@@ -33,7 +33,7 @@ namespace InventorySystem.App.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var all = _unitOfWork.StoreHouseRepository.GetAll();
+            var all = _service.GetAllStoreHouse();
             return Json(new { data = all });
         }
 
@@ -43,15 +43,7 @@ namespace InventorySystem.App.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (entity.Id == 0)
-                {
-                    _unitOfWork.StoreHouseRepository.Add(entity);
-                }
-                else
-                {
-                    _unitOfWork.StoreHouseRepository.Update(entity);
-                }
-                _unitOfWork.SavesChanges();
+                _service.UpsertStoreHouse(entity);
                 return RedirectToAction(nameof(Index));
             }
             return View(entity);
@@ -60,14 +52,13 @@ namespace InventorySystem.App.Areas.Admin.Controllers
         [HttpDelete]
         public IActionResult Delete(int id)
         {
-            var entity = _unitOfWork.StoreHouseRepository.Get(id);
+            var entity = _service.GetStoreHouse(id);
             if (entity == null)
             {
                 return Json(new { success = false, message = "Hubo un error al eliminar el almacén." });
             }
-            _unitOfWork.StoreHouseRepository.Remove(entity);
-            _unitOfWork.SavesChanges();
-            return Json(new {success = true, message = "Almacén eliminado exitosamente." });
+            _service.DeleteStoreHouse(entity);
+            return Json(new {success = true, message = "Almacén eliminado." });
         }
 
         #endregion
